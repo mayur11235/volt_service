@@ -71,4 +71,26 @@ class SharepointSearchResults(BaseTool):
     
         """Use the tool asynchronously."""
         raise NotImplementedError("Currently we do not support async call")
+
+class GeneralAnswer(BaseModel):
+    """Default Conversation."""
+
+    query: str = Field(description="Provide general respnse if a specific tool is not called.")
+
+class GeneralAnswerResults(BaseTool):
+    """Provide general response if a specific tool is not called."""
+
+    name: str = "general_pass"
+    description: str = "Provide general response if a specific tool is not called."
+    args_schema: Type[BaseModel] = GeneralAnswer
+
+    def _run(self, query: str) -> str:
+        """Use the tool."""
+        
+        results = query
+        return results
     
+    async def _arun(self, query: str) -> str:
+    
+        """Use the tool asynchronously."""
+        raise NotImplementedError("Currently we do not support async call")    

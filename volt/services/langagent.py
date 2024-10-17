@@ -13,7 +13,7 @@ from langchain_openai import ChatOpenAI
 from langchain_core.messages import BaseMessage
 from langgraph.graph import END, StateGraph, START
 from langgraph.prebuilt import create_react_agent
-from langtools import DFSRetrieverResults,AlationSearchResults,SharepointSearchResults
+from langtools import DFSRetrieverResults,AlationSearchResults,SharepointSearchResults,GeneralAnswerResults
 import sys
 import os
 parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -23,32 +23,24 @@ from config import Config
 dfs_retriever_tool = DFSRetrieverResults()
 alation_search_tool = AlationSearchResults()
 sharepoint_search_tool = SharepointSearchResults()
+general_answer_tool = GeneralAnswerResults()
 
-members = ["DFS_Retriever", "Alation_Search", "Sharepoint_Search"]
+members = ["DFS_Retriever", "Alation_Search", "Sharepoint_Search", "General_Answer"]
 system_prompt = (
     "You are a supervisor tasked with managing a conversation between the"
-    " following workers:  {members}. Given the following user request,"
+    " following workers: {members}. Given the following user request,"
     " respond with the worker to act next only. Each worker will perform a"
-    " task and respond with their results and status. When finished,"
-    " respond with FINISH and if no worker is called then provide best response on your ability."
+    " task and respond with their results and status. If not relevant, default BYPASS with a general answer."
 )
-options = ["FINISH"] + members
-
 class routeResponse(BaseModel):
-    next: Literal["FINISH","DFS_Retriever", "Alation_Search","Sharepoint_Search"]
+    next: Literal["DFS_Retriever", "Alation_Search", "Sharepoint_Search", "General_Answer"]
 
 prompt = ChatPromptTemplate.from_messages(
     [
         ("system", system_prompt),
         MessagesPlaceholder(variable_name="messages"),
-        (
-            "system",
-            "Given the conversation above, who should act next?"
-            " Or should we FINISH? Select one of: {options}"
-            "Always end reply wit hollabolla",
-        ),
     ]
-).partial(options=str(options), members=", ".join(members))
+).partial(options=str(members), members=", ".join(members))
 
 llm = ChatOpenAI(model="gpt-4o",api_key=Config.OPENAI_API_KEY)
 
@@ -75,24 +67,26 @@ alation_search_node = functools.partial(agent_node, agent=alation_search_agent, 
 sharepoint_search_agent = create_react_agent(llm, tools=[sharepoint_search_tool])
 sharepoint_search_node = functools.partial(agent_node, agent=sharepoint_search_agent, name="Sharepoint_Search")
 
+general_answer_agent = create_react_agent(llm, tools=[general_answer_tool])
+general_answer_node = functools.partial(agent_node, agent=general_answer_agent, name="General_Answer")
+
 workflow = StateGraph(AgentState)
 workflow.add_node("DFS_Retriever", dfs_retriever_node)
 workflow.add_node("Alation_Search", alation_search_node)
 workflow.add_node("Sharepoint_Search", sharepoint_search_node)
+workflow.add_node("General_Answer", general_answer_node)
 workflow.add_node("supervisor", supervisor_agent)
 
-for member in members:
-    workflow.add_edge(member, "supervisor")
-
 conditional_map = {k: k for k in members}
-conditional_map["FINISH"] = END
-print(conditional_map)
+
 workflow.add_conditional_edges("supervisor", lambda x: x["next"], conditional_map)
+for member in members:
+    workflow.add_edge(member, END)
 workflow.add_edge(START, "supervisor")
 
-graph = workflow.compile()
+volt_graph = workflow.compile()
 try:
-    image_data = graph.get_graph().draw_mermaid_png()
+    image_data = volt_graph.get_graph().draw_mermaid_png()
     with open("assets/graph_image.png", "wb") as f:
         f.write(image_data)
 except Exception:
@@ -100,17 +94,19 @@ except Exception:
 
 # print("=========================================")
 # for s in graph.stream({"messages": [HumanMessage(content="Provide list of alation fields.")]}):
+#     print(s)
+#     print("----")
+# print("=========================================")
+# for s in graph.stream({"messages": [HumanMessage(content="Retrieve the crtical items.")]},{"recursion_limit": 10}):
 #     if "__end__" not in s:
 #         print(s)
 #         print("----")
-print("=========================================")
-for s in graph.stream({"messages": [HumanMessage(content="Retrieve the crtical items.")]},{"recursion_limit": 10}):
-    if "__end__" not in s:
-        print(s)
-        print("----")
-print("=========================================")
+# print("=========================================")
 # for s in graph.stream({"messages": [HumanMessage(content="Retrieve sharepoint links.")]},{"recursion_limit": 10}):
 #     if "__end__" not in s:
 #         print(s)
 #         print("----")
 # print("=========================================")
+# for s in graph.stream({"messages": [HumanMessage(content="How is the weather today.")]}):
+#     print(s)
+#     print("----")
