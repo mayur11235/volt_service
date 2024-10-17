@@ -6,9 +6,9 @@ from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.asymmetric import ec
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives import serialization
-from volt.services.langservice import LangService
+from volt.services.lang_service import LangService
 
-class AgentService:
+class AgentAPIService:
     def __init__(self):
         self.public_key = self.fetch_public_key()
     

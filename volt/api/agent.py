@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Request, HTTPException, Header
-from volt.services.agentservice import AgentService
+from volt.services.agent_api_service import AgentAPIService
 import json
 
 router = APIRouter()
 
-agent_service = AgentService()
+agent_service = AgentAPIService()
 
 @router.post("/agent")
 async def chat_completion(request: Request, github_public_key_signature: str = Header(None)):
