@@ -1,4 +1,9 @@
-python3 -m venv venv
+if [ ! -d "venv" ]; then
+    python3 -m venv venv
+    pip install -r requirements.txt
+else
+    pip install -r requirements.txt
+    echo "Virtual environment already exists"    
+fi    
 source venv/bin/activate
-pip install -r requirements.txt
-python -m uvicorn main:app --reload  
+#python -B -m uvicorn main:app --reload
