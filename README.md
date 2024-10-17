@@ -1,2 +1,2 @@
 # Volt Service
-Volt is an agent service for Discover(HAckathon) assets.
+Volt is an agent service for Discover(Hackathon) assets.
