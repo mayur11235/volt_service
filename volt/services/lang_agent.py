@@ -13,6 +13,10 @@ from langgraph.graph import END, StateGraph, START
 from langgraph.prebuilt import create_react_agent
 from volt.services.lang_tools import DFSRetrieverResults, AlationSearchResults, SharepointSearchResults, GeneralAnswerResults
 from volt.config import Config
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 class routeResponse(BaseModel):
     next: Literal["DFS_Retriever", "Alation_Search", "Sharepoint_Search", "General_Answer"]
@@ -38,6 +42,7 @@ class LangAgent:
             " following workers: {members}. Given the following user request,"
             " respond with the worker to act next only. Each worker will perform a"
             " task and respond with their results and status. If not relevant, default BYPASS with a general answer."
+            "DFS is Discover Financial Services, a financial services company."
         )
 
         self.prompt = ChatPromptTemplate.from_messages(
@@ -85,7 +90,7 @@ class LangAgent:
 
     def agent_node(self, state, agent, name):
         result = agent.invoke(state)
-        print("Agent Called: ", name)
+        logger.info(f"Agent Called: {name}")
         return {
             "messages": [result["messages"][-1].content]
         }
@@ -99,4 +104,4 @@ if __name__ == "__main__":
     for s in lang_agent.volt_graph.stream({"messages": [HumanMessage(content="Provide list of alation fields.")]}):
         if "supervisor" not in s:
             agent_response=[y for x,y in s.items()][0]
-            print(agent_response['messages'][0])
+            logger.info(agent_response['messages'][0])

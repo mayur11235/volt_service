@@ -7,6 +7,10 @@ from cryptography.hazmat.primitives.asymmetric import ec
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives import serialization
 from volt.services.lang_service import LangService
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 class AgentAPIService:
     def __init__(self):
@@ -33,10 +37,9 @@ class AgentAPIService:
 
         try:
             public_key.verify(signature,payload,ec.ECDSA(hashes.SHA256()))
-            print("Payload is valid")
             return True
         except Exception as e:
-            print(str(e))
+            logger.error(str(e))
             return False        
 
     async def generate_completion(self, request_data:Request):

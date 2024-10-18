@@ -81,7 +81,7 @@ class GeneralAnswerResults(BaseTool):
     """Provide general response if a specific tool is not called."""
 
     name: str = "general_pass"
-    description: str =  "You are Volt a helpful DFS assistant that provides access to internal data and insights.Provide general response if a specific tool is not called."
+    description: str =  "You are Volt a helpful DFS assistant that provides access to internal data and insights.Provide general response if a specific tool is not called.DFS is Discover Financial Services.Do not provide information that you do not have access to"
     args_schema: Type[BaseModel] = GeneralAnswer
 
     def _run(self, query: str) -> str:

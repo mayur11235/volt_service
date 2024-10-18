@@ -2,6 +2,11 @@ from uuid import uuid4
 from volt.config import Config
 from authlib.integrations.starlette_client import OAuth
 from fastapi import APIRouter, Request, HTTPException, Cookie
+import logging
+
+logging.getLogger("httpx").setLevel(logging.WARNING)
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
@@ -31,8 +36,8 @@ async def pre_auth(request: Request):
 async def post_auth(request: Request, oauth_state: str = Cookie(None)):
     query_params = dict(request.query_params)
     state = query_params.get('state')
-    print("state:",state)
-    print("oauth_state:",oauth_state)
+    logger.info(f"state: {state}")
+    logger.info(f"oauth_state: {oauth_state}")
     code = query_params.get('code')
 
     if state != oauth_state:
