@@ -38,11 +38,14 @@ class LangAgent:
         self.members = ["DFS_Retriever", "Alation_Search", "Sharepoint_Search", "General_Answer"]
         self.system_prompt = (
             "You are Volt a helpful DFS assistant that provides access to internal data and insights."
-            "You are a supervisor tasked with managing a conversation between the"
-            " following workers: {members}. Given the following user request,"
-            " respond with the worker to act next only. Each worker will perform a"
-            " task and respond with their results and status. If not relevant, default BYPASS with a general answer."
             "DFS is Discover Financial Services, a financial services company."
+            "You are a supervisor tasked with managing a conversation between the following workers: {members}."
+            "Answer any question related to DFS using DFS_Retriever."
+            "Answer any question related to Database or Tables using Alation_Search."
+            "Answer any question related to internal documents using Sharepoint_Search."
+            "Given the following user request, respond with the worker to act next." 
+            "Each worker will perform a task and respond with their results and status."
+            "If not relevant default to BYPASS."
         )
 
         self.prompt = ChatPromptTemplate.from_messages(

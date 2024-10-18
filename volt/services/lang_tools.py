@@ -1,6 +1,7 @@
 from typing import  Type
 from langchain_core.tools import BaseTool
 from pydantic import BaseModel,Field
+from volt.mock_data import mock_alation_data ,mock_sharepoint_data ,mock_retriever_data
 
 class DFSRetriever(BaseModel):
     """Input for the DFS Retriever."""
@@ -8,16 +9,16 @@ class DFSRetriever(BaseModel):
     query: str = Field(description="Search Text")
     
 class DFSRetrieverResults(BaseTool):
-    """Tool that searches the DFS vector database and returns matching documents."""
+    """Tool that searches the DFS vector database and returns matching documents.Answer about discover financial services."""
 
     name: str = "dfs_retriever"
-    description: str = "Tool that searchies the DFS vector database and returns matching documents."
+    description: str = "Tool that searches the DFS vector database and returns matching documents."
     args_schema: Type[BaseModel] = DFSRetriever
 
     def _run(self, query: str) -> str:
         """Use the tool."""
         
-        results = "Confidential fields are bank account numbers, social security numbers, and credit card numbers."
+        results = mock_retriever_data
         return results
     
     async def _arun(self, query: str) -> str:
@@ -26,9 +27,9 @@ class DFSRetrieverResults(BaseTool):
         raise NotImplementedError("Currently we do not support async call")
 
 class AlationSearch(BaseModel):
-    """Input for the Alation Search."""
+    """Input for the Alation to search table and view definitons."""
 
-    query: str = Field(description="Search Text")
+    table_name: str = Field(description="Table Name")
 
 class AlationSearchResults(BaseTool):
     """Tool that searches Alation for data models."""
@@ -37,14 +38,14 @@ class AlationSearchResults(BaseTool):
     description: str = "Tool that searches alation for data models."
     args_schema: Type[BaseModel] = AlationSearch
 
-    def _run(self, query: str) -> str:
+    def _run(self, table_name: str) -> str:
         """Use the tool."""
         
         # Simulate a search result
-        results = "Employee table has three fields - employee_id, employee_name, and employee_salary."
+        results = mock_alation_data
         return results
     
-    async def _arun(self, query: str) -> str:
+    async def _arun(self, table_name: str) -> str:
     
         """Use the tool asynchronously."""
         raise NotImplementedError("Currently we do not support async call")
@@ -52,19 +53,19 @@ class AlationSearchResults(BaseTool):
 class SharepointSearch(BaseModel):
     """Input for the Sharepoint Search."""
 
-    query: str = Field(description="Search Text")
+    document_search: str = Field(description="Document Search Text")
 
 class SharepointSearchResults(BaseTool):
-    """Tool that searches Sharepoint for data models."""
+    """Tool that searches Microsoft Document or Web pages on Sharepoint."""
 
     name: str = "sharepoint_search"
-    description: str = "Tool that searches Sharepoint for miscelenious discover assets."
+    description: str = "Tool that searches Sharepoint for miscellaneous discover assets.Do not add title on own"
     args_schema: Type[BaseModel] = SharepointSearch
 
-    def _run(self, query: str) -> str:
+    def _run(self, document_search: str) -> str:
         """Use the tool."""
         
-        results = "Link to relevent docs from Sharepoint search. \noffice.com/docs/1234\noffice.com/docs/2345"
+        results = mock_sharepoint_data
         return results
     
     async def _arun(self, query: str) -> str:
@@ -75,7 +76,7 @@ class SharepointSearchResults(BaseTool):
 class GeneralAnswer(BaseModel):
     """Default Conversation."""
 
-    query: str = Field(description="Provide general respnse if a specific tool is not called.")
+    usr_msg: str = Field(description="Provide general respnose if a specific tool is not called.")
 
 class GeneralAnswerResults(BaseTool):
     """Provide general response if a specific tool is not called."""
@@ -84,13 +85,13 @@ class GeneralAnswerResults(BaseTool):
     description: str =  "You are Volt a helpful DFS assistant that provides access to internal data and insights.Provide general response if a specific tool is not called.DFS is Discover Financial Services.Do not provide information that you do not have access to"
     args_schema: Type[BaseModel] = GeneralAnswer
 
-    def _run(self, query: str) -> str:
+    def _run(self, usr_msg: str) -> str:
         """Use the tool."""
         
-        results = query
+        results = usr_msg
         return results
     
-    async def _arun(self, query: str) -> str:
+    async def _arun(self, usr_msg: str) -> str:
     
         """Use the tool asynchronously."""
         raise NotImplementedError("Currently we do not support async call")    
