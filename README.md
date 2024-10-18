@@ -6,6 +6,8 @@
 
 The Volt agent consists of both supervisor and worker agents. Various worker agents enable access to internal data from vector databases, call Alation api for database and table structures , and search SharePoint for relevant documents.
 
+![Graph Image](assets/graph_image.png)
+
 ## Setup Instructions
 
 To set up Volt, follow these steps:
