@@ -21,9 +21,9 @@ To set up Volt, follow these steps:
 
 - Set up the necessary callback and authorization endpoints in your GitHub application settings.
 
-### 3. Use ngrok for Local Development
+### 3. Use ngrok during local development
 
-To provide universal access to your localhost, use a ngrok account:
+To expose service to internet, use a ngrok account:
 
 ```bash
 ngrok http --url=roughy-sure-xxxxxxxxx.ngrok-free.app 8000
