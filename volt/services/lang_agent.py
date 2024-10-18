@@ -1,22 +1,18 @@
+import os
+import sys
+import operator
+import functools
 from pydantic import BaseModel
 from typing import Literal, Sequence, Annotated
 from typing_extensions import TypedDict
-import functools
-import operator
-import sys
-import os
-from langchain_community.tools.tavily_search import TavilySearchResults
-from langchain_experimental.tools import PythonREPLTool
 from langchain_core.messages import HumanMessage
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import BaseMessage
 from langgraph.graph import END, StateGraph, START
 from langgraph.prebuilt import create_react_agent
-from lang_tools import DFSRetrieverResults, AlationSearchResults, SharepointSearchResults, GeneralAnswerResults
-parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-sys.path.insert(0, parent_dir)
-from config import Config
+from volt.services.lang_tools import DFSRetrieverResults, AlationSearchResults, SharepointSearchResults, GeneralAnswerResults
+from volt.config import Config
 
 class routeResponse(BaseModel):
     next: Literal["DFS_Retriever", "Alation_Search", "Sharepoint_Search", "General_Answer"]
@@ -37,6 +33,7 @@ class LangAgent:
 
         self.members = ["DFS_Retriever", "Alation_Search", "Sharepoint_Search", "General_Answer"]
         self.system_prompt = (
+            "You are Volt a helpful DFS assistant that provides access to internal data and insights."
             "You are a supervisor tasked with managing a conversation between the"
             " following workers: {members}. Given the following user request,"
             " respond with the worker to act next only. Each worker will perform a"

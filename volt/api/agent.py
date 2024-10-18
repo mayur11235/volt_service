@@ -1,6 +1,6 @@
+import json
 from fastapi import APIRouter, Request, HTTPException, Header
 from volt.services.agent_api_service import AgentAPIService
-import json
 
 router = APIRouter()
 

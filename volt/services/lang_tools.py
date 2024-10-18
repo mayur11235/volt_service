@@ -1,6 +1,6 @@
+from typing import  Type
 from langchain_core.tools import BaseTool
 from pydantic import BaseModel,Field
-from typing import Dict, List, Tuple, Type, Union
 
 class DFSRetriever(BaseModel):
     """Input for the DFS Retriever."""
@@ -64,7 +64,7 @@ class SharepointSearchResults(BaseTool):
     def _run(self, query: str) -> str:
         """Use the tool."""
         
-        results = "Link to relevent docs from Sahrepoint search. \noffice.com/docs/1234\noffice.com/docs/2345"
+        results = "Link to relevent docs from Sharepoint search. \noffice.com/docs/1234\noffice.com/docs/2345"
         return results
     
     async def _arun(self, query: str) -> str:
@@ -81,7 +81,7 @@ class GeneralAnswerResults(BaseTool):
     """Provide general response if a specific tool is not called."""
 
     name: str = "general_pass"
-    description: str = "Provide general response if a specific tool is not called."
+    description: str =  "You are Volt a helpful DFS assistant that provides access to internal data and insights.Provide general response if a specific tool is not called."
     args_schema: Type[BaseModel] = GeneralAnswer
 
     def _run(self, query: str) -> str:

@@ -1,7 +1,7 @@
+import os
 import uvicorn
 from fastapi import FastAPI
 from volt.api import auth, agent
-import os
 from starlette.middleware.sessions import SessionMiddleware
 
 app = FastAPI()
