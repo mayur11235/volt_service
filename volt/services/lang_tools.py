@@ -18,7 +18,7 @@ class DFSRetrieverResults(BaseTool):
     def _run(self, query: str) -> str:
         """Use the tool."""
         
-        results = mock_retriever_data
+        results = mock_retriever_data +"\nAI should not add external information to response"
         return results
     
     async def _arun(self, query: str) -> str:

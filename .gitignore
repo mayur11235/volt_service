@@ -4,4 +4,3 @@ __pycache__/
 venv/
 .help
 .DS_Store
-test.sh
