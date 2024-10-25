@@ -20,7 +20,7 @@ To set up Volt, follow these steps:
 ### 2. Configure Callback and Authorization Endpoints
 
 - Set up the necessary callback and authorization endpoints in your GitHub application settings.
-- Follow Github Docs [Follow Github Docs](https://docs.github.com/en/copilot/building-copilot-extensions/creating-a-copilot-extension/configuring-your-github-app-for-your-copilot-agent)
+- Follow Github Docs [here](https://docs.github.com/en/copilot/building-copilot-extensions/creating-a-copilot-extension/configuring-your-github-app-for-your-copilot-agent)
 
 ### 3. Use ngrok during local development
 
