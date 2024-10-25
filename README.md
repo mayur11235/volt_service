@@ -60,7 +60,7 @@ Execute the `run.sh` script to start the application:
 ```bash
 ./run.sh
 ```
-### Developer Notes
+## Developer Notes
 * The Supervisor agent interacts with Worker agents by using a combination of system prompts and understanding user messages.
 * Currently, the Worker agents return mock data within the functions, which serves as a placeholder for implementing actual API calls in the future.
 * An OpenAI and Ngrok account are required to run the service.
